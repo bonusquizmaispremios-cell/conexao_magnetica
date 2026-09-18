@@ -410,42 +410,19 @@ elif st.session_state.etapa == "App":
     _nav_ics = ['🏠', '⚡', '🃏', '💬', '🧠', '🎭', '💋', '📚', '📸', '⚔️', '🗓️', '📈', '📋', '🏆']
     _nav_lbs = ['Dashboard', 'Resposta Rápida', 'Carta na Manga', 'Turbinar Mensagem', 'Raio-X da Conversa', 'Simulador de Conversa', '💋 Mestre da Lábia ⭐', 'Biblioteca Inteligente', 'Leitor de Perfil', 'Comparar Conversas', 'Plano 7 Dias', 'Minha Evolução', 'Relatório Semanal', 'Conquistas']
     _nav_idx = _nav_pgs.index(st.session_state.pagina) if st.session_state.pagina in _nav_pgs else 0
-    if '_menu_open' not in st.session_state: st.session_state['_menu_open'] = False
 
-    _cl, _cc, _cr, _cm = st.columns([1, 6, 1, 1])
-    with _cl:
-        if st.button("‹", key="nav_prev", use_container_width=True, disabled=_nav_idx==0):
-            st.session_state.pagina = _nav_pgs[_nav_idx-1]; st.rerun()
-    with _cc:
-        st.markdown(f"<div style='text-align:center;padding:7px 0;font-weight:700;font-size:0.95em;color:#1A1A2E;'>{_nav_lbs[_nav_idx]}<br><span style='font-size:0.65em;color:#94A3B8;'>{_nav_idx+1}/{len(_nav_pgs)}</span></div>", unsafe_allow_html=True)
-    with _cr:
-        if st.button("›", key="nav_next", use_container_width=True, disabled=_nav_idx==len(_nav_pgs)-1):
-            st.session_state.pagina = _nav_pgs[_nav_idx+1]; st.rerun()
-    with _cm:
-        if st.button("📋", key="nav_menu", use_container_width=True):
-            st.session_state['_menu_open'] = not st.session_state['_menu_open']; st.rerun()
+    # ── NAVEGAÇÃO: selectbox limpo ──
+    _opcoes_nav = [f"{ic} {lb}" for ic, lb in zip(_nav_ics, _nav_lbs)]
+    _sel_nav = st.selectbox("📍 Navegar para:", _opcoes_nav,
+        index=_nav_idx, key="nav_select", label_visibility="collapsed")
+    _pg_escolhida = _nav_pgs[_opcoes_nav.index(_sel_nav)]
+    if _pg_escolhida != st.session_state.pagina:
+        st.session_state.pagina = _pg_escolhida; st.rerun()
 
-    if st.session_state['_menu_open']:
-        _d1 = st.columns(7)
-        if _d1[0].button("🏠", help="Dashboard", use_container_width=True): st.session_state.pagina="Home"; st.rerun()
-        if _d1[1].button("⚡", help="Resposta Rápida", use_container_width=True): st.session_state.pagina="Rapida"; st.rerun()
-        if _d1[2].button("🃏", help="Carta na Manga", use_container_width=True): st.session_state.pagina="Carta"; st.rerun()
-        if _d1[3].button("💬", help="Turbinar Mensagem", use_container_width=True): st.session_state.pagina="Turbinar"; st.rerun()
-        if _d1[4].button("🧠", help="Raio-X da Conversa", use_container_width=True): st.session_state.pagina="Analisar"; st.rerun()
-        if _d1[5].button("🎭", help="Simulador de Conversa", use_container_width=True): st.session_state.pagina="Roleplay"; st.rerun()
-        if _d1[6].button("💋", help="💋 Mestre da Lábia ⭐", use_container_width=True): st.session_state.pagina="Labia"; st.rerun()
-        _d2 = st.columns(7)
-        if _d2[0].button("📚", help="Biblioteca Inteligente", use_container_width=True): st.session_state.pagina="Biblioteca"; st.rerun()
-        if _d2[1].button("📸", help="Leitor de Perfil", use_container_width=True): st.session_state.pagina="Perfil"; st.rerun()
-        if _d2[2].button("⚔️", help="Comparar Conversas", use_container_width=True): st.session_state.pagina="Comparar"; st.rerun()
-        if _d2[3].button("🗓️", help="Plano 7 Dias", use_container_width=True): st.session_state.pagina="Plano"; st.rerun()
-        if _d2[4].button("📈", help="Minha Evolução", use_container_width=True): st.session_state.pagina="Progresso"; st.rerun()
-        if _d2[5].button("📋", help="Relatório Semanal", use_container_width=True): st.session_state.pagina="Resumo"; st.rerun()
-        if _d2[6].button("🏆", help="Conquistas", use_container_width=True): st.session_state.pagina="Conquistas"; st.rerun()
-
+    st.markdown(f"<div style='text-align:center;font-weight:700;font-size:1.1em;color:#1A1A2E;padding:4px 0;'>{_nav_ics[_nav_idx]} {_nav_lbs[_nav_idx]}</div>", unsafe_allow_html=True)
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
-    # ── ROTEAMENTO ──
+
     if st.session_state.pagina == "Dialogo":
         import time as _t, json as _j, re as _r
 
