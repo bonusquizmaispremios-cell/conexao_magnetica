@@ -273,16 +273,19 @@ def barra_salvar():
     with col_b:
         st.download_button("💾 SALVAR DADOS (.json)", data=gerar_json(),
             file_name=f"conexa_{nome_u}.json", mime="application/json", use_container_width=True, key="dl_conexa_1")
+
+    # Upload para carregar dados salvos
+    with st.expander("📂 Carregar dados salvos", expanded=False):
+        _fup_cm = st.file_uploader("Selecione o arquivo .json:", type=["json"], key="ul_sv_cm", label_visibility="collapsed")
+        if _fup_cm:
+            try:
+                for _k2, _v2 in json.loads(_fup_cm.read().decode()).items():
+                    if _k2 not in ("api_key","etapa","chave_api"):
+                        st.session_state[_k2] = _v2
+                st.success("✅ Dados restaurados!"); st.rerun()
+            except: st.error("Arquivo inválido.")
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
-    st.markdown("""<style>
-    .dica-nav{font-size:0.72em;color:#94A3B8;text-align:center;padding:2px 0 6px;}
-    .dica-mobile{display:none;}
-    .dica-desktop{display:block;}
-    @media(max-width:768px){.dica-mobile{display:block;}.dica-desktop{display:none;}}
-    </style>
-    <div class='dica-nav dica-mobile'>👆 Deslize o dedo para navegar entre as abas</div>
-    <div class='dica-nav dica-desktop'>📋 Clique no ícone acima para abrir o menu completo</div>
-    """, unsafe_allow_html=True)
+
 
 
 # ============================================================
